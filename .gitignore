@@ -2,6 +2,10 @@
 __pycache__/
 *.py[codz]
 *$py.class
+*.sqlite
+*.sqlite3
+*.db
+.env
 
 # C extensions
 *.so
@@ -218,3 +222,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project storage & artifacts
+storage/certificates/*
+storage/tmp/*
+!storage/certificates/.gitkeep
+!storage/tmp/.gitkeep
+*.pdf
+*.zip
+*.csv
+!tests/fixtures/*.csv
+!tests/fixtures/*.xlsx
+

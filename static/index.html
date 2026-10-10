@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroCert • Enterprise Bulk Certificate Generation Platform</title>
+  <meta name="description" content="High-performance, asynchronous bulk certificate generation platform with dynamic layout scaling, cryptographic verification, and instant downloads.">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">🎓</div>
+      <div class="brand-info">
+        <h1>AeroCert Studio</h1>
+        <span>Bulk Certificate Engine</span>
+      </div>
+    </a>
+
+    <nav class="nav-tabs" aria-label="Main Navigation">
+      <button class="tab-btn active" data-tab="tab-studio" id="nav-tab-studio">
+        <span>✨</span> Studio & Generator
+      </button>
+      <button class="tab-btn" data-tab="tab-jobs" id="nav-tab-jobs">
+        <span>📊</span> Live Jobs & Downloads
+      </button>
+      <button class="tab-btn" data-tab="tab-verifier" id="nav-tab-verifier">
+        <span>🔍</span> Verify Credential
+      </button>
+      <button class="tab-btn" data-tab="tab-api" id="nav-tab-api">
+        <span>⚡</span> API & Swagger
+      </button>
+    </nav>
+
+    <div class="nav-status">
+      <div class="status-badge" id="system-status-badge">
+        <span class="status-dot"></span>
+        <span id="stat-system-health">Operational</span>
+      </div>
+      <a href="/docs" target="_blank" class="btn btn-sm btn-secondary" style="margin-left:0.5rem;">
+        Open Swagger /docs ↗
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Hero Stats Row -->
+    <section class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-info">
+          <span>Active Templates</span>
+          <h3 id="stat-active-templates">1</h3>
+        </div>
+        <div class="stat-icon">📜</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <span>Worker Engine</span>
+          <h3>Celery Async</h3>
+        </div>
+        <div class="stat-icon">⚡</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <span>Typography Engine</span>
+          <h3>ReportLab 4.x</h3>
+        </div>
+        <div class="stat-icon">🎨</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <span>Security Hardening</span>
+          <h3>ZipSlip & CSV Guard</h3>
+        </div>
+        <div class="stat-icon">🛡️</div>
+      </div>
+    </section>
+
+    <!-- TAB 1: STUDIO & GENERATOR -->
+    <section class="tab-content active" id="tab-studio">
+      <div class="studio-grid">
+        
+        <!-- Left Column: Form & Ingestion Config -->
+        <div class="studio-form-col">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span style="font-size: 1.3rem;">⚙️</span>
+                <div>
+                  <h2>Batch Configuration</h2>
+                  <div class="panel-subtitle">Select your certificate styling and ingestion format</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Template Picker -->
+            <div class="form-group">
+              <label for="template-select" class="form-label">Certificate Template</label>
+              <select id="template-select" class="form-select">
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+
+            <!-- Acceptance Policy -->
+            <div class="form-group">
+              <label for="acceptance-policy" class="form-label">Batch Validation Policy</label>
+              <select id="acceptance-policy" class="form-select">
+                <option value="all_or_nothing">All or Nothing (Strict Transactional Batch)</option>
+                <option value="partial_acceptance">Partial Acceptance (Isolate & Process Valid Rows)</option>
+              </select>
+            </div>
+
+            <!-- Ingestion Method Switcher -->
+            <div class="method-switch">
+              <button type="button" class="switch-btn active" id="method-form-btn">
+                <span>📝</span> Direct Interactive Form
+              </button>
+              <button type="button" class="switch-btn" id="method-upload-btn">
+                <span>📁</span> Upload CSV / Excel File
+              </button>
+            </div>
+
+            <!-- SECTION A: Interactive Form Input -->
+            <div id="form-method-section">
+              <div class="row-actions" style="margin-bottom: 0.75rem;">
+                <span class="form-label" style="margin: 0;">Recipient Directory</span>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button type="button" class="btn btn-sm btn-secondary" id="btn-load-demo">
+                    ✨ Load 4 Sample Recipients
+                  </button>
+                  <button type="button" class="btn btn-sm btn-secondary" id="btn-add-row">
+                    + Add Row
+                  </button>
+                </div>
+              </div>
+
+              <div class="recipients-builder">
+                <div id="recipients-container">
+                  <!-- Dynamic Rows Inserted Here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION B: Drag & Drop File Upload -->
+            <div id="upload-method-section" style="display: none;">
+              <input type="file" id="file-input" accept=".csv, .xlsx" style="display: none;">
+              <div class="dropzone" id="dropzone">
+                <div class="dropzone-icon">☁️</div>
+                <div class="dropzone-text">
+                  <h4>Drag & Drop your spreadsheet here</h4>
+                  <p>Accepts UTF-8 encoded <strong>.CSV</strong> and Microsoft Excel <strong>.XLSX</strong></p>
+                  <p id="selected-file-name" style="color: var(--primary-cyan); font-weight: 600; margin-top: 0.5rem;"></p>
+                </div>
+              </div>
+
+              <div class="sample-downloads">
+                <span style="font-size: 0.78rem; color: var(--text-dim);">Download templates:</span>
+                <a href="/static/examples/recipients_sample.csv" class="sample-link" download>
+                  📄 Sample CSV
+                </a>
+                <a href="/static/examples/recipients_sample.xlsx" class="sample-link" download>
+                  📊 Sample XLSX
+                </a>
+              </div>
+            </div>
+
+            <!-- Submit Generation -->
+            <div style="margin-top: 1.5rem;">
+              <button type="button" class="btn btn-primary btn-block" id="btn-generate">
+                <span>🚀 Generate Certificates Now</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Column: Live Visual Preview Canvas -->
+        <div class="studio-preview-col">
+          <div class="preview-container">
+            <div class="panel-card" style="margin-bottom: 0;">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <span style="font-size: 1.3rem;">👁️</span>
+                  <div>
+                    <h2>Live Typography Preview</h2>
+                    <div class="panel-subtitle">Auto-scales font sizes dynamically to fit long names</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">A4 Landscape</span>
+              </div>
+
+              <!-- Certificate Mockup Visual -->
+              <div class="cert-mockup-wrapper">
+                <div class="cert-mockup-border"></div>
+                <div class="cert-mockup-border-inner"></div>
+
+                <div class="cert-header">
+                  <div class="cert-org-logo">🏛️</div>
+                  <div class="cert-issuer" id="preview-issuer">Global Executive Academy</div>
+                  <h3 class="cert-title" id="preview-title">Certificate of Executive Leadership</h3>
+                </div>
+
+                <div class="cert-body">
+                  <div class="cert-presentation-text">This is proudly conferred upon</div>
+                  <div class="cert-recipient-name" id="preview-recipient">Jane Doe</div>
+                  <div class="cert-description">
+                    For demonstrated visionary leadership, professional ethics, and outstanding achievement.
+                  </div>
+                </div>
+
+                <div class="cert-footer">
+                  <div>
+                    <span id="preview-date">Issued on: 2026-10-10</span><br>
+                    <span style="font-family: monospace; color: var(--primary-cyan);">ID: CERT-2026-PREVIEW</span>
+                  </div>
+                  <div class="cert-seal">★</div>
+                  <div style="text-align: right;">
+                    <div style="font-family: cursive; font-size: 1rem; color: #CBD5E1;">Academic Chancellor</div>
+                    <span style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 2px; display: inline-block;">Authorized Signature</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim); text-align: center;">
+                Generated documents are rendered in crisp, print-ready vector PDF at 300 DPI.
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: LIVE JOBS & DOWNLOADS -->
+    <section class="tab-content" id="tab-jobs">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span style="font-size: 1.3rem;">📊</span>
+            <div>
+              <h2>Batch Processing Monitor & Deliverables</h2>
+              <div class="panel-subtitle">Real-time job queue status, download individual PDFs, or stream complete ZIP archives</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="updateTotalStats(); showToast('Refreshed status', 'info');">
+            🔄 Refresh
+          </button>
+        </div>
+
+        <div id="jobs-container" class="jobs-list">
+          <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📂</div>
+            <p>No batch jobs submitted in this browser session yet.</p>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem;">
+              Head over to the <strong>Studio & Generator</strong> tab to trigger your first batch!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: VERIFY CREDENTIAL -->
+    <section class="tab-content" id="tab-verifier">
+      <div class="panel-card verifier-card">
+        <div style="font-size: 3rem; margin-bottom: 0.75rem;">🛡️</div>
+        <h2 style="font-family: var(--font-heading); font-size: 1.75rem; margin-bottom: 0.5rem;">
+          Public Credential Verification
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
+          Verify cryptographic authenticity against tamper-proof registry records without logging in.
+        </p>
+
+        <div style="display: flex; gap: 0.5rem; max-width: 500px; margin: 0 auto;">
+          <input type="text" id="verify-code-input" class="form-input" placeholder="e.g. 4pPpZbgcNqZX-Y-AE2eToQ" style="font-family: monospace;">
+          <button type="button" class="btn btn-primary" id="btn-verify" style="white-space: nowrap;">
+            Verify Credential
+          </button>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <span style="font-size: 0.78rem; color: var(--text-dim);">Test with generated code:</span>
+          <button type="button" class="btn btn-sm btn-secondary" style="margin-left: 0.5rem; font-family: monospace;" onclick="document.getElementById('verify-code-input').value='4pPpZbgcNqZX-Y-AE2eToQ'; document.getElementById('btn-verify').click();">
+            4pPpZbgcNqZX-Y-AE2eToQ
+          </button>
+        </div>
+
+        <div id="verify-result"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: API & DIAGNOSTICS -->
+    <section class="tab-content" id="tab-api">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span style="font-size: 1.3rem;">⚡</span>
+            <div>
+              <h2>API Documentation & Developer Diagnostics</h2>
+              <div class="panel-subtitle">Access interactive OpenAPI specs, diagnostics endpoints, and integration guides</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+          <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Interactive Swagger UI</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Full interactive playground to test requests with schema definitions.</p>
+            <a href="/docs" target="_blank" class="btn btn-sm btn-primary">Open /docs ↗</a>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">ReDoc Viewer</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Clean, publication-ready API documentation with collapsible endpoints.</p>
+            <a href="/redoc" target="_blank" class="btn btn-sm btn-secondary">Open /redoc ↗</a>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Readiness Health Probe</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Check database pooling, connectivity, and node readiness.</p>
+            <a href="/health/ready" target="_blank" class="btn btn-sm btn-secondary">Check /health/ready ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
